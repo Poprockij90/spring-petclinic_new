@@ -86,11 +86,5 @@ public class Vet extends Person {
         getSpecialtiesInternal().add(specialty);
     }
 
-//    @Override
-//    public String toString() {
-//        return "Vet{" +
-//            "specialties=" + specialties +
-//            ", visits=" + visits +" id="+ this.getId()+
-//            '}';
-//    }
+
 }

@@ -47,16 +47,26 @@ public class Visit extends BaseEntity {
     @Column(name = "pet_id")
     private Integer petId;
 
+//    @Column(name = "status")
+//    private String status;
 
     @ManyToOne
     @JoinColumn(name = "vet_id")
     private Vet vet;
 
-    //todo
+
 //    @ManyToOne
 //    @JoinColumn(name = "pet_id")
 //    private Pet pet;
 
+
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
 
     public Vet getVet() {
         return vet;
@@ -98,20 +108,6 @@ public class Visit extends BaseEntity {
         this.petId = petId;
     }
 
-//    public Pet getPet() {
-//        return pet;
-//    }
-//
-//    public void setPet(Pet pet) {
-//        this.pet = pet;
-//    }
-    //    public Integer getVetId() {
-//        return vetId;
-//    }
-//
-//    public void setVetId(Integer vetId) {
-//        this.vetId = vetId;
-//    }
 
 
     @Override

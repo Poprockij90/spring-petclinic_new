@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.owner;
-
 import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.samples.petclinic.visit.Visit;
@@ -28,8 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
-
-
+import java.util.Map;
 /**
  * @author Juergen Hoeller
  * @author Ken Krebs
@@ -43,10 +41,8 @@ class VisitController {
     private static final String VIEWS_VISITS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdateVisitForm";
     private final VisitRepository visits;
     private final PetRepository pets;
-
     //my
     private final VetRepository vets;
-
 
     public VisitController(VisitRepository visits, PetRepository pets, VetRepository vets) {
         this.visits = visits;
@@ -65,11 +61,6 @@ class VisitController {
         dataBinder.setDisallowedFields("id");
     }
 
-//    @InitBinder
-//    public void setAllowedFields(WebDataBinder dataBinder) {
-//        dataBinder.setDisallowedFields("id");
-//    }
-
     /**
      * Called before each and every @RequestMapping annotated method.
      * 2 goals:
@@ -80,21 +71,33 @@ class VisitController {
      * @return Pet
      */
 
-
     //my for add to list of vets
     @ModelAttribute("vets")
     public Collection<Vet> allVets() {
         return vets.findAll();
     }
 
+    //my
+    @ModelAttribute("visit")
+    public Visit loadPetWithVisit(@PathVariable("petId") int petId, @PathVariable(name = "visitId", required = false) Integer visitId, Map<String, Object> model) {
+        Pet pet = this.pets.findById(petId);
+        model.put("pet", pet);
+        Visit visit = visitId == null ? new Visit() : visits.findById(visitId);
+        pet.addVisit(visit);
+        return visit;
+    }
+
+
+
+
 
     @GetMapping("/pets/{petId}/visits/new")
-    public String initNewVisitForm(@PathVariable("petId") int petId, ModelMap model) {
+    public String initNewVisitForm(@PathVariable("petId") int petId, Visit visit, ModelMap model) {
         Pet pet = this.pets.findById(petId);
-        Visit visit = new Visit();
+//        Visit visit = new Visit();
         pet.addVisit(visit);
         model.put("pet", pet);
-        model.put("visit", visit);
+//        model.put("visit", visit);
         return "pets/createOrUpdateVisitForm";
     }
 
@@ -114,7 +117,7 @@ class VisitController {
     @GetMapping("/pets/{petId}/visits/{visitId}/edit")
     public String initUpdateForm(@PathVariable("visitId") int visitId, @PathVariable("petId") int petId, ModelMap model) {
         Visit visit = this.visits.findById(visitId);
-        model.put("visit", visit);
+//        model.put("visit", visit);
         Pet pet = pets.findById(petId);
         model.put("pet", pet);
         return VIEWS_VISITS_CREATE_OR_UPDATE_FORM;
@@ -123,10 +126,12 @@ class VisitController {
 
     @PostMapping("/pets/{petId}/visits/{visitId}/edit")
 //    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
-    public String editVisit(@Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId) {
+    public String editVisit(@Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, @PathVariable("petId") int petId) {
         if (result.hasErrors()) {
             return "pets/createOrUpdateVisitForm";
         } else {
+//            Pet pet=pets.findById(petId);
+//            pet.addVisit(visit);
 //        visit.setId(visitId);
             this.visits.save(visit);
             return "redirect:/owners/{ownerId}";
