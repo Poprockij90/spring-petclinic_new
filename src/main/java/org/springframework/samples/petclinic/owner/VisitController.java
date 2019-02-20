@@ -108,6 +108,7 @@ class VisitController {
         if (result.hasErrors()) {
             return "pets/createOrUpdateVisitForm";
         } else {
+            visit.setStatus("active");
             this.visits.save(visit);
             return "redirect:/owners/{ownerId}";
         }
@@ -140,14 +141,15 @@ class VisitController {
 
 
     //todo
-    @PostMapping("/pets/{petId}/visits/{visitId}/delite")
-//    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
+    @GetMapping("/pets/{petId}/visits/{visitId}/cancel")
     public String deliteVisit(@PathVariable("visitId") int visitId) {
 
         Visit visit = visits.findById(visitId);
         System.out.println(visit.toString());
+        visit.toCancel();
+        System.out.println(visit.getStatus());
 //            pet.addVisit(visit);
-        this.visits.delete(visit);
+        this.visits.save(visit);
         return "redirect:/owners/{ownerId}";
 
     }

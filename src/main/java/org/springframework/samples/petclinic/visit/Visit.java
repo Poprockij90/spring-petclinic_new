@@ -47,8 +47,8 @@ public class Visit extends BaseEntity {
     @Column(name = "pet_id")
     private Integer petId;
 
-//    @Column(name = "status")
-//    private String status;
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "vet_id")
@@ -60,18 +60,30 @@ public class Visit extends BaseEntity {
 //    private Pet pet;
 
 
-//    public String getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(String status) {
-//        this.status = status;
-//    }
+
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void toCancel(){
+        setStatus("cancelled");
+    }
+
+    public boolean isCancelled(){
+        if (status.equals("cancelled")){
+            return true;
+        }else return false;
+    }
 
     public Vet getVet() {
         return vet;
     }
-
     public void setVet(Vet vet) {
         this.vet = vet;
     }
