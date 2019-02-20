@@ -70,16 +70,19 @@
                     <th>Cansel</th>
                 </tr>
                 </thead>
-                <tr th:each="visit : ${pet.visits}">
+                <tr th:each="visit : ${pet.visits}" th:style="${visit.isCancelled()} ? ${'color: red;'}">
                     <td th:text="${#temporals.format(visit.date, 'yyyy-MM-dd')}"></td>
-                    <td th:text="${visit?.description}"></td>
-                    <td th:text="${visit?.vet.lastName}"></td>
-                    <td th:text="${visit?.status}"></td>
-                    <td><a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/edit(ownerId=${owner.id},visitId=${visit.id},petId=${pet.id})}">
-                        Edit visit</a></td>
-                    <td>
-                    <td><a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/cancel(ownerId=${owner.id},visitId=${visit.id},petId=${pet.id})}">
-                        Cancel visit</a></td>
+                    <td th:text="${visit.description}"></td>
+                    <td th:text="${visit.vet.lastName}"></td>
+                    <td th:class="${visit.isCancelled()==false}?hidden" th:text="${visit.status}"></td>
+                    <td th:class="${visit.isCancelled()}?hidden">
+                        <a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/edit(ownerId=${owner.id},visitId=${visit.id},petId=${pet.id})}">
+                            Edit visit</a>
+                    </td>
+                    <td th:class="${visit.isCancelled()}?hidden">
+                        <a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/cancel(ownerId=${owner.id},visitId=${visit.id},petId=${pet.id})}">
+                            Cancel visit</a>
+                    </td>
                 </tr>
                 <tr>
                     <td><a
