@@ -24,7 +24,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Map;
@@ -40,15 +39,15 @@ import java.util.Map;
 class VisitController {
     private static final String VIEWS_VISITS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdateVisitForm";
     private final VisitRepository visits;
-    private final PetRepository pets;
-    //my
     private final VetRepository vets;
+    private final PetRepository pets;
+    private final OwnerRepository owners;
 
-    public VisitController(VisitRepository visits, PetRepository pets, VetRepository vets) {
+    public VisitController(VisitRepository visits, PetRepository pets, OwnerRepository owners, VetRepository vets) {
         this.visits = visits;
-        this.pets = pets;
-        //my for add to list of vets
         this.vets = vets;
+        this.pets = pets;
+        this.owners = owners;
     }
 
     @InitBinder("visit")
@@ -71,13 +70,11 @@ class VisitController {
      * @return Pet
      */
 
-    //my for add to list of vets
     @ModelAttribute("vets")
     public Collection<Vet> allVets() {
         return vets.findAll();
     }
 
-    //my
     @ModelAttribute("visit")
     public Visit loadPetWithVisit(@PathVariable("petId") int petId, @PathVariable(name = "visitId", required = false) Integer visitId, Map<String, Object> model) {
         Pet pet = this.pets.findById(petId);
@@ -94,15 +91,11 @@ class VisitController {
     @GetMapping("/pets/{petId}/visits/new")
     public String initNewVisitForm(@PathVariable("petId") int petId, Visit visit, ModelMap model) {
         Pet pet = this.pets.findById(petId);
-//        Visit visit = new Visit();
         pet.addVisit(visit);
         model.put("pet", pet);
-//        model.put("visit", visit);
         return "pets/createOrUpdateVisitForm";
     }
 
-    //todo mayby change
-    // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
     @PostMapping("/pets/{petId}/visits/new")
     public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
         if (result.hasErrors()) {
@@ -114,41 +107,30 @@ class VisitController {
         }
     }
 
-    //todo mayby change
+
     @GetMapping("/pets/{petId}/visits/{visitId}/edit")
-    public String initUpdateForm(@PathVariable("visitId") int visitId, @PathVariable("petId") int petId, ModelMap model) {
-        Visit visit = this.visits.findById(visitId);
-//        model.put("visit", visit);
-        Pet pet = pets.findById(petId);
-        model.put("pet", pet);
+    public String initUpdateForm(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId, ModelMap model) {
+        Owner owner=owners.findById(ownerId);
+        model.put("ownersPets",owner.getPets());
         return VIEWS_VISITS_CREATE_OR_UPDATE_FORM;
     }
 
-
     @PostMapping("/pets/{petId}/visits/{visitId}/edit")
-//    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
-    public String editVisit(@Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId, @PathVariable("petId") int petId) {
+    public String editVisit(@Valid Visit visit, BindingResult result) {
         if (result.hasErrors()) {
             return "pets/createOrUpdateVisitForm";
         } else {
-//            Pet pet=pets.findById(petId);
-//            pet.addVisit(visit);
-//        visit.setId(visitId);
             this.visits.save(visit);
             return "redirect:/owners/{ownerId}";
         }
     }
 
 
-    //todo
-    @GetMapping("/pets/{petId}/visits/{visitId}/cancel")
-    public String deliteVisit(@PathVariable("visitId") int visitId) {
 
+    @GetMapping("/pets/{petId}/visits/{visitId}/cancel")
+    public String cancelVisit(@PathVariable("visitId") int visitId) {
         Visit visit = visits.findById(visitId);
-        System.out.println(visit.toString());
         visit.toCancel();
-        System.out.println(visit.getStatus());
-//            pet.addVisit(visit);
         this.visits.save(visit);
         return "redirect:/owners/{ownerId}";
 

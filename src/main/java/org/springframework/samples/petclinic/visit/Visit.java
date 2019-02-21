@@ -44,8 +44,28 @@ public class Visit extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    //    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "pet_id", nullable = false)
+//    private Pet pet;
+//
+//    public Pet getPet() {
+//        return pet;
+//    }
+//
+//    public void setPet(Pet pet) {
+//        this.pet = pet;
+//    }
     @Column(name = "pet_id")
     private Integer petId;
+
+    public Integer getPetId() {
+        return this.petId;
+    }
+
+    public void setPetId(Integer petId) {
+        this.petId = petId;
+    }
+
 
     @Column(name = "status")
     private String status;
@@ -111,24 +131,17 @@ public class Visit extends BaseEntity {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Integer getPetId() {
-        return this.petId;
-    }
-
-    public void setPetId(Integer petId) {
-        this.petId = petId;
-    }
+//
 
 
 
-    @Override
-    public String toString() {
-        return "Visit{" +" id="+getId()+
-            " date=" + date +
-            ", description='" + description + '\'' +
-            ", petId=" + petId +
-            ", vet=" + vet +" new="+isNew()+
-            '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Visit{" +" id="+getId()+
+//            " date=" + date +
+//            ", description='" + description + '\'' +
+//            ", petId=" + petId +
+//            ", vet=" + vet +" new="+isNew()+
+//            '}';
+//    }
 }

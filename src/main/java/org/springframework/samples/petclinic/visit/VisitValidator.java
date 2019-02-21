@@ -18,6 +18,7 @@ public class VisitValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Visit visit = (Visit) obj;
+        String descrition=visit.getDescription();
 
 
         // date validation
@@ -25,14 +26,15 @@ public class VisitValidator implements Validator {
             errors.rejectValue("date", REQUIRED, REQUIRED);
         }
 
-        // petid validation
-        if (visit.getPetId() == null) {
-            errors.rejectValue("petid", REQUIRED, REQUIRED);
-        }
 
         // Vet validation
         if (visit.getVet() == null) {
             errors.rejectValue("vet", REQUIRED, REQUIRED);
+        }
+
+        // Description validation
+        if (!StringUtils.hasLength(descrition)) {
+            errors.rejectValue("description", REQUIRED, REQUIRED);
         }
 
 

@@ -99,7 +99,7 @@ public class Owner extends Person {
     public List<Pet> getPets() {
         List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
         PropertyComparator.sort(sortedPets,
-                new MutableSortDefinition("name", true, true));
+            new MutableSortDefinition("name", true, true));
         return Collections.unmodifiableList(sortedPets);
     }
 
@@ -144,9 +144,9 @@ public class Owner extends Person {
     public String toString() {
         return new ToStringCreator(this)
 
-                .append("id", this.getId()).append("new", this.isNew())
-                .append("lastName", this.getLastName())
-                .append("firstName", this.getFirstName()).append("address", this.address)
-                .append("city", this.city).append("telephone", this.telephone).toString();
+            .append("id", this.getId()).append("new", this.isNew())
+            .append("lastName", this.getLastName())
+            .append("firstName", this.getFirstName()).append("address", this.address)
+            .append("city", this.city).append("telephone", this.telephone).toString();
     }
 }
